@@ -74,5 +74,5 @@ The Proof of Concept developed in the preparation phase was successful and elimi
 * **Sample Call:**
 
   ```javascript
-    curl --header "Content-Type: application/json" --data '{"data": "02023012301231"}' --request POST https://t3nato.herokuapp.com/data
+    curl -i --header "Content-Type: application/json" --data '{"data": "02023012301231"}' --request POST https://t3nato.herokuapp.com/data
   ```
