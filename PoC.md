@@ -42,3 +42,37 @@ Received uplink from  test1
 
 #### Conclusion
 The Proof of Concept developed in the preparation phase was successful and eliminated the risk of not being able to integrate with `TTN`. Now we are sure that we are able to easily integrate with `TTN` and listen to messages of the registered devices. During the next sprint we will have to implement the message redirection, saving the coordinates into a database and to test the integration of the server in the whole environment of the project.
+
+#### API Doc
+
+##### Send data
+----
+  Share data with the server, in order to sync all the data with the devices in our Country's System
+
+* **URL**
+
+  https://t3nato.herokuapp.com/data
+
+* **Method:**
+
+  `POST`
+
+* **Data Params**
+
+  **Required:**
+
+  `data`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+ 
+* **Error Response:**
+
+  * **Code:** 400 Bad request! <br />
+
+* **Sample Call:**
+
+  ```javascript
+    curl --header "Content-Type: application/json" --data '{"data": "02023012301231"}' --request POST https://t3nato.herokuapp.com/data
+  ```

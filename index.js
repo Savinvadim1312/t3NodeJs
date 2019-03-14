@@ -20,8 +20,33 @@ ttn.data(appID, accessKey)
 
 //create a server object:
 http.createServer(function (req, res) {
-  res.write('Hello World!'); //write a response to the client
-  res.end(); //end the response
+  const { headers, method, url } = req;
+  let body = [];
+
+  req.on('error', (err) => {
+    console.error(err);
+  }).on('data', (chunk) => {
+    body.push(chunk);
+  }).on('end', () => {
+    body = Buffer.concat(body).toString();
+
+    
+    if (method !== "POST" || url !== '/data') {
+      res.statusCode = 400;
+      res.end();
+      return;
+    }
+
+    console.log(headers);
+    console.log(method);
+    console.log(url);
+    console.log(body);
+    // TODO send this data to ttn
+
+    res.statusCode = 200;
+    res.end();
+  });
+
 }).listen(port); //the server object listens on port 8080
 
 console.log("server listens to port " + port);
