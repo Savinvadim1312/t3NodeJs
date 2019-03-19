@@ -1,27 +1,11 @@
-const ttn = require("ttn");
 var http = require('http');
-require('dotenv').config();
 
-const { logTTN, logHTTP } = require('./database');
+const { logHTTP } = require('./database');
+const { listen: TTNListener, sendData: sendDataToTTN } = require('./ttn');
 
-
-const appID = process.env.TTN_APP_ID;
-const accessKey = process.env.TTN_ACCESS_KEY;
 const port = process.env.PORT || 8080;
 
-
-ttn.data(appID, accessKey)
-  .then(function (client) {
-    client.on("uplink", function (devID, payload) {
-      console.log("Received uplink from ", devID)
-      console.log(payload)
-      return logTTN(payload);
-    })
-  })
-  .catch(function (error) {
-    console.error("Error", error)
-    process.exit(1)
-  })
+TTNListener();
 
 
 //create a server object:
@@ -42,13 +26,17 @@ http.createServer(function (req, res) {
       return;
     }
 
+    body = JSON.parse(body);
+
+    // Log the request
+    await logHTTP({headers, method, url, body});
+
     console.log(headers);
     console.log(method);
     console.log(url);
     console.log(body);
     // TODO send this data to ttn
-
-    await logHTTP({headers, method, url, body});
+    sendDataToTTN(body.data);
 
     res.statusCode = 200;
     res.end();
