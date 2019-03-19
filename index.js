@@ -1,15 +1,21 @@
 const ttn = require("ttn");
 var http = require('http');
 
+const { logTTN } = require('./database');
+
+
 const appID = "t3saxion";
 const accessKey = "ttn-account-v2.KsIDoQJMmLXj-VpY1Wn03VRinxKfTMbY3RdzeKYbo6w";
 const port = process.env.PORT || 8080;
+
+
 
 ttn.data(appID, accessKey)
   .then(function (client) {
     client.on("uplink", function (devID, payload) {
       console.log("Received uplink from ", devID)
       console.log(payload)
+      return logTTN(payload);
     })
   })
   .catch(function (error) {
