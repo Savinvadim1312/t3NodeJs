@@ -1,13 +1,13 @@
 const ttn = require("ttn");
 var http = require('http');
+require('dotenv').config();
 
-const { logTTN } = require('./database');
+const { logTTN, logHTTP } = require('./database');
 
 
-const appID = "t3saxion";
-const accessKey = "ttn-account-v2.KsIDoQJMmLXj-VpY1Wn03VRinxKfTMbY3RdzeKYbo6w";
+const appID = process.env.TTN_APP_ID;
+const accessKey = process.env.TTN_ACCESS_KEY;
 const port = process.env.PORT || 8080;
-
 
 
 ttn.data(appID, accessKey)
@@ -33,10 +33,9 @@ http.createServer(function (req, res) {
     console.error(err);
   }).on('data', (chunk) => {
     body.push(chunk);
-  }).on('end', () => {
+  }).on('end', async () => {
     body = Buffer.concat(body).toString();
 
-    
     if (method !== "POST" || url !== '/data') {
       res.statusCode = 400;
       res.end();
@@ -48,6 +47,8 @@ http.createServer(function (req, res) {
     console.log(url);
     console.log(body);
     // TODO send this data to ttn
+
+    await logHTTP({headers, method, url, body});
 
     res.statusCode = 200;
     res.end();

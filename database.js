@@ -16,3 +16,10 @@ module.exports.logTTN = async (payload) => {
     payload.payload_string = String(payload.payload_raw)
     database.collection('ttn_requests').insertOne(payload);
 }
+
+module.exports.logHTTP = async (payload) => {
+    if (database == null) {
+        return;
+    }
+    database.collection('http_requests').insertOne(payload);
+}
