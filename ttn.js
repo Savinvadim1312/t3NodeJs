@@ -3,8 +3,12 @@ require('dotenv').config();
 
 const { logTTN } = require('./database');
 
+const axios = require('axios');
+
 const appID = process.env.TTN_APP_ID;
 const accessKey = process.env.TTN_ACCESS_KEY;
+
+const servers = ["https://90e9122c.eu.ngrok.io"];
 
 ttnDataClient = null;
 
@@ -21,6 +25,19 @@ module.exports.listen = async () => {
         console.log("Received uplink from ", devID)
         console.log(payload)
         await logTTN(payload);
+        var i;
+        for (i = 0; i < servers.length; i++) { 
+            axios.post(servers[i], {
+                data: payload
+                })
+                .then((res) => {
+                console.log(`statusCode: ${res.statusCode}`)
+                console.log(res)
+                })
+                .catch((error) => {
+                console.error(error)
+                })
+          }
     })
 }
 

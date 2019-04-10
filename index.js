@@ -20,7 +20,7 @@ http.createServer(function (req, res) {
   }).on('end', async () => {
     body = Buffer.concat(body).toString();
 
-    if (method !== "POST" || url !== '/data') {
+    if (method !== "POST") {
       res.statusCode = 400;
       res.end();
       return;
